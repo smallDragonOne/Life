@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include android:id="@+id/navInfo" layout="@layout/nav_info"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPaleYellow">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="13dp"
+            android:id="@+id/inputText"
+            android:focusable="true"
+            android:gravity="top"
+            android:background="@color/colorPaleYellow"
+            android:inputType="textMultiLine" />
+
+    </LinearLayout>
+
+</LinearLayout>
