@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,28 +13,34 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.example.zj.liferecord.DataBase.IOperateDataBase;
 import com.example.zj.liferecord.DataBase.OperateDataBase;
 import com.example.zj.liferecord.Model.RecordBean;
+import com.example.zj.liferecord.MyApplication;
 import com.example.zj.liferecord.R;
+import com.example.zj.liferecord.Utils.MyAdapter;
+import com.example.zj.liferecord.Utils.ViewHolder;
 import com.example.zj.liferecord.Views.NavInfoManager;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
     private ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        setContentView(R.layout.activity_main);
+        System.out.println("base111Activity");
         init();
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -51,9 +58,15 @@ public class MainActivity extends Activity {
             contentList.add(bean.getContent());
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,contentList);
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,contentList);
 
-        listView.setAdapter(adapter);
+        listView.setAdapter(new MyAdapter<RecordBean>(list,this, R.layout.main_list_item) {
+            @Override
+            protected void Covert(ViewHolder holder, RecordBean data) {
+                TextView text = holder.getViews(R.id.text);
+                text.setText(data.getContent());
+            }
+        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -70,7 +83,7 @@ public class MainActivity extends Activity {
     private  void  init(){
         listView = (ListView) findViewById(R.id.list);
 
-        NavInfoManager nav = new NavInfoManager(this, NavInfoManager.NavType.justRight);
+        NavInfoManager nav = new NavInfoManager(this, NavInfoManager.NavType.NoLeft);
         nav.SetTitle("LifeRecord");
         nav.setRightText("添加");
 
@@ -95,11 +108,32 @@ public class MainActivity extends Activity {
             String content = cursor.getString(cursor.getColumnIndex("Content"));
 
             list.add(new RecordBean(id,title,content,null));
-            //System.out.println("-->"+id+"::::::::::"+name);
+
         }
 
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == event.KEYCODE_BACK){
+            System.out.println(MyApplication.getMyApplication().getActivityCount());
+            exit();
+        }
+        return true;
+    }
+    private long mTime = 0;
+    private void exit(){
+        if (System.currentTimeMillis() - mTime > 2000){
+
+            mTime = System.currentTimeMillis();
+            ShowToast("再点一次退出应用");
+        }
+        else {
+            System.out.println("123445");
+            removeAllActivity();
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

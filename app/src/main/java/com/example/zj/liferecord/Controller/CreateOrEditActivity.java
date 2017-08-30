@@ -24,7 +24,7 @@ import java.util.Date;
  * Created by zj on 2017/8/26.
  */
 
-public class CreateOrEditActivity extends Activity {
+public class CreateOrEditActivity extends BaseActivity {
 
     private EditText mEditText;
 

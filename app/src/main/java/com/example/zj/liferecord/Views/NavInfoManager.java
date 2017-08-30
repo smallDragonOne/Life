@@ -16,6 +16,7 @@ public class NavInfoManager implements View.OnClickListener {
     private TextView mTx_back;
     private TextView mTx_right;
     private TextView mTitle;
+    private TextView mTx_backImg;
 
     private  Activity mActivity;
     public  enum NavType{
@@ -23,7 +24,8 @@ public class NavInfoManager implements View.OnClickListener {
         justBack,
         justRight,
         NoTitle,
-
+        NoLeft,
+        noAll
     }
 
     public NavInfoManager(Activity activity, NavType type){
@@ -31,6 +33,7 @@ public class NavInfoManager implements View.OnClickListener {
         mTx_back.setOnClickListener(this);
         mTx_right = (TextView)activity.findViewById(R.id.right);
         mTitle = (TextView)activity.findViewById(R.id.title);
+        mTx_backImg = (TextView)activity.findViewById(R.id.back_Img);
         mActivity = activity;
         dealNavShow(type);
     }
@@ -54,6 +57,17 @@ public class NavInfoManager implements View.OnClickListener {
         }
         else if (type == NavType.justRight){
             mTx_back.setVisibility(View.GONE);
+        }
+        else if (type == NavType.NoLeft){
+            mTx_backImg.setVisibility(View.GONE);
+            mTx_back.setVisibility(View.GONE);
+        }
+
+        if (type == NavType.noAll){
+            mTx_back.setVisibility(View.GONE);
+            mTx_right.setVisibility(View.GONE);
+            mTitle.setVisibility(View.GONE);
+            mTx_backImg.setVisibility(View.GONE);
         }
     }
 
