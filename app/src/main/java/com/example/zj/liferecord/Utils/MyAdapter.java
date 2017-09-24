@@ -51,4 +51,9 @@ public abstract class MyAdapter<T> extends BaseAdapter {
     }
 
     protected abstract void Covert(ViewHolder holder, T data);
+
+    public void notifyUpdate(List<T> datas){
+        this.mDatas = datas;
+        this.notifyDataSetChanged();
+    }
 }

@@ -23,12 +23,21 @@ public class SqlLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DataBaseTableManager.Record);
-        Toast.makeText(mContext,"success",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mContext,"success",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        /*
         db.execSQL("drop table if exists" + DataBaseTableManager.Record);
-        onCreate(db);
+        onCreate(db);*/
+        switch (oldVersion){
+            case 1:
+                db.execSQL("alter table Record add number int");
+                break;
+            default:
+                break;
+        }
     }
 }

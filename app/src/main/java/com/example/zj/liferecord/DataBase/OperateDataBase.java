@@ -34,7 +34,7 @@ public class OperateDataBase implements IOperateDataBase {
 
     private  SqlLiteHelper GetSqlLite(){
         if (mHelper == null){
-            mHelper = new SqlLiteHelper(mContext,SqlLiteHelper.DataBaseName,null,1);
+            mHelper = new SqlLiteHelper(mContext,SqlLiteHelper.DataBaseName,null,2);
         }
 
         return  mHelper;

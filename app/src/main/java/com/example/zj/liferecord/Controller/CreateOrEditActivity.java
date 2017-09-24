@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.example.zj.liferecord.R;
 import com.example.zj.liferecord.Utils.Common;
 import com.example.zj.liferecord.Views.NavInfoManager;
 
+import java.io.Console;
 import java.util.Date;
 
 /**
@@ -28,10 +30,14 @@ public class CreateOrEditActivity extends BaseActivity {
 
     private EditText mEditText;
 
+    private boolean isCreate = true;
+    private Integer currentId ;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
+
     }
 
 
@@ -52,16 +58,29 @@ public class CreateOrEditActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String content = mEditText.getText().toString();
-                if (!content.isEmpty()){
+                if (!content.isEmpty() && isCreate){
                     IOperateDataBase db = new OperateDataBase(CreateOrEditActivity.this);
+
+                    int number = Common.getCurrentMaxNumber(db);
+                    number += 1;
                     SQLiteDatabase databse = db.getWriteDataBase();
-                    databse.execSQL("insert into Record(Title,Content,CreateTime) values(?,?,?)",new Object[]{"",content,new Date()});
+                    databse.execSQL("insert into Record(Title,Content,CreateTime,number) values(?,?,?,?)",new Object[]{"",content,new Date(),number});
                     databse.close();
                     CreateOrEditActivity.this.finish();
-                    Toast.makeText(CreateOrEditActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
+                    ShowToast("保存成功");
                 }
-                else {
-                    Toast.makeText(CreateOrEditActivity.this,"保存失败",Toast.LENGTH_SHORT).show();
+                else if (!content.isEmpty()){
+                    IOperateDataBase db = new OperateDataBase(CreateOrEditActivity.this);
+                    SQLiteDatabase databse = db.getWriteDataBase();
+                    System.out.println("&&&" + currentId);
+                    databse.execSQL("update Record set content = '"+content+"' where id = "+currentId+"");
+                    databse.close();
+                    CreateOrEditActivity.this.finish();
+                    ShowToast("修改成功");
+                }
+
+                if (content.isEmpty()) {
+                    Toast.makeText(CreateOrEditActivity.this,"请先添加内容",Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -69,8 +88,14 @@ public class CreateOrEditActivity extends BaseActivity {
 
         Intent intent = getIntent();
         String content = intent.getStringExtra("content");
+        int id = intent.getIntExtra("id",-1);
+        if (id != -1){
+            currentId = id;
+        }
         if (content != null){
+            isCreate = false;
             mEditText.setText(content);
+            mEditText.setSelection(content.length());
         }
 
     }

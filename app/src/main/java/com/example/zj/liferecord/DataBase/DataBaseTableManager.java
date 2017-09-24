@@ -15,6 +15,6 @@ public class DataBaseTableManager {
 
     public static final String Record = "create table Record ("
             + "id integer primary key autoincrement," + "Title text,"
-            + "Content text," + "CreateTime date)";
+            + "Content text," + "CreateTime date," + "number int)";
 
 }
